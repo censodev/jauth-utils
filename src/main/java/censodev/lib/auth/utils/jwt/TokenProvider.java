@@ -1,15 +1,20 @@
 package censodev.lib.auth.utils.jwt;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Builder
 @NoArgsConstructor
+@Getter
 public class TokenProvider {
+    private final String header = "Authorization";
+    private final String prefix = "Bearer ";
     private final int expiration = 86_400_000;
     private final String secret = "jalskdjlakjdlkajsdlkjsalkdjsalkdjlksajdlksajdlksajdlkjsalkdjaslkdjlksajdlksajdl";
 
@@ -30,7 +35,9 @@ public class TokenProvider {
                 .setSigningKey(secret)
                 .parseClaimsJws(token)
                 .getBody();
-        return new ObjectMapper().convertValue(claims.get("credentials"), tClass);
+        ObjectMapper mapper = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.convertValue(claims.get("credentials"), tClass);
     }
 
     public void validateToken(String token) throws
