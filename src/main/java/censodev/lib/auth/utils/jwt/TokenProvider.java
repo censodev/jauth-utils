@@ -3,6 +3,7 @@ package censodev.lib.auth.utils.jwt;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.util.Date;
 
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class TokenProvider {
     private String header = "Authorization";
