@@ -2,6 +2,10 @@ package censodev.lib.auth.utils;
 
 import censodev.lib.auth.utils.jwt.Credentials;
 import censodev.lib.auth.utils.jwt.TokenProvider;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.Data;
 import lombok.ToString;
 
@@ -14,6 +18,8 @@ public class Test {
     @ToString(callSuper = true)
     static class User implements Credentials {
         private String name = "name";
+
+        // Getters, setters ...
 
         @Override
         public Object getSubject() {
@@ -31,9 +37,26 @@ public class Test {
         }
     }
     public static void main(String[] args) {
-        TokenProvider tokenProvider = new TokenProvider();
+        TokenProvider tokenProvider = TokenProvider.builder()
+                .header("Authorization")
+                .prefix("Bearer ")
+                .expiration(86_400_000)
+                .build();
         String token = tokenProvider.generateToken(new User());
         User u = tokenProvider.getCredentials(token, User.class);
+        try {
+            tokenProvider.validateToken(token);
+        } catch (MalformedJwtException e) {
+            e.printStackTrace();
+        } catch (ExpiredJwtException e) {
+            e.printStackTrace();
+        } catch (UnsupportedJwtException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (SignatureException e) {
+            e.printStackTrace();
+        }
         System.out.println(u.toString());
         System.out.println(u.getSubject());
         System.out.println(u.getUsername());

@@ -13,10 +13,10 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 public class TokenProvider {
-    private final String header = "Authorization";
-    private final String prefix = "Bearer ";
-    private final int expiration = 86_400_000;
-    private final String secret = "jalskdjlakjdlkajsdlkjsalkdjsalkdjlksajdlksajdlksajdlkjsalkdjaslkdjlksajdlksajdl";
+    private String header = "Authorization";
+    private String prefix = "Bearer ";
+    private int expiration = 86_400_000;
+    private String secret = "jalskdjlakjdlkajsdlkjsalkdjsalkdjlksajdlksajdlksajdlkjsalkdjaslkdjlksajdlksajdl";
 
     public <T extends Credentials> String generateToken(T credentials) {
         Date now = new Date();
