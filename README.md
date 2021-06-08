@@ -1,6 +1,6 @@
 # JAuth Utils
 ## Introduction
-JAuth Utils is a Java library simplifies JWT authentication base on [jjwt](https://github.com/jwtk/jjwt) and supports for Spring Boot
+JAuth Utils is a Java library that simplifies JWT authentication wrap [jjwt](https://github.com/jwtk/jjwt) and supports Spring Boot.
 
 ## Prerequisites
 * Java 8
