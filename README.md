@@ -96,7 +96,7 @@ class User implements Credentials {
 TokenProvider tokenProvider = new TokenProvider();
 
 // With builder
-        TokenProvider tokenProvider = TokenProvider.builder()
+TokenProvider tokenProvider = TokenProvider.builder()
         .header("Authorization")
         .prefix("Bearer ")
         .expiration(86_400_000)
@@ -130,16 +130,14 @@ try {
 ```java
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private TokenProvider tokenProvider;
-
+    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .cors()
                     .and()
-                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider, User.class), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider(), User.class), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                         .antMatchers(
                                 "/api/auth/**"
@@ -149,7 +147,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public TokenProvider tokenProvider() {
-        return new TokenProvider();
+        return TokenProvider.builder()
+                .header("Authorization")
+                .prefix("Bearer ")
+                .expiration(86_400_000)
+                .build();;
     }
 }
 ```
