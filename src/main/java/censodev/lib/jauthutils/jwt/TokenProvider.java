@@ -1,4 +1,4 @@
-package censodev.lib.auth.utils.jwt;
+package censodev.lib.jauthutils.jwt;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,10 +15,17 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 public class TokenProvider {
+    @Builder.Default
     private String header = "Authorization";
+
+    @Builder.Default
     private String prefix = "Bearer ";
+
+    @Builder.Default
     private int expiration = 86_400_000;
-    private String secret = "jalskdjlakjdlkajsdlkjsalkdjsalkdjlksajdlksajdlksajdlkjsalkdjaslkdjlksajdlksajdl";
+
+    @Builder.Default
+    private String secret = "qwertyuiopasdfghjklzxcvbnm1!2@3#4$5%6^7&8*9(0)-_=+";
 
     public <T extends Credentials> String generateToken(T credentials) {
         Date now = new Date();

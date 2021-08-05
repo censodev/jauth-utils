@@ -1,7 +1,7 @@
-package censodev.lib.auth.utils;
+package censodev.lib.jauthutils;
 
-import censodev.lib.auth.utils.jwt.Credentials;
-import censodev.lib.auth.utils.jwt.TokenProvider;
+import censodev.lib.jauthutils.jwt.Credentials;
+import censodev.lib.jauthutils.jwt.TokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -46,15 +46,7 @@ public class Test {
         User u = tokenProvider.getCredentials(token, User.class);
         try {
             tokenProvider.validateToken(token);
-        } catch (MalformedJwtException e) {
-            e.printStackTrace();
-        } catch (ExpiredJwtException e) {
-            e.printStackTrace();
-        } catch (UnsupportedJwtException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (SignatureException e) {
+        } catch (MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException | SignatureException e) {
             e.printStackTrace();
         }
         System.out.println(u.toString());

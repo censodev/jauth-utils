@@ -1,4 +1,4 @@
-package censodev.lib.auth.utils.jwt;
+package censodev.lib.jauthutils.jwt;
 
 import java.util.List;
 
