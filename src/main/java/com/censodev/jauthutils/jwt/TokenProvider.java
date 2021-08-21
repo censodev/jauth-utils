@@ -1,4 +1,4 @@
-package censodev.lib.jauthutils.jwt;
+package com.censodev.jauthutils.jwt;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

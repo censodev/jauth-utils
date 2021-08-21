@@ -1,4 +1,4 @@
-package censodev.lib.jauthutils.jwt;
+package com.censodev.jauthutils.jwt;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

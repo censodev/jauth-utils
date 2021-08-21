@@ -1,4 +1,4 @@
-package censodev.lib.jauthutils.jwt;
+package com.censodev.jauthutils.jwt;
 
 import java.util.List;
 
