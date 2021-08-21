@@ -8,7 +8,7 @@
     <artifactId>jauth-utils</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
-    <name>jauth-utils</name>
+    <name>JAuth Utils</name>
     <description>JAuth Utils is a Java library that simplifies JWT authentication wrap jjwt and supports Spring Boot</description>
     <url>https://github.com/censodev/jauth-utils</url>
 
