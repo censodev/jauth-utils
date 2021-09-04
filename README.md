@@ -10,7 +10,7 @@ JAuth Utils is a Java library that simplifies JWT authentication wrap [jjwt](htt
 ### Config in pom.xml
 ```
 <dependency>
-    <groupId>com.censodev</groupId>
+    <groupId>io.github.censodev</groupId>
     <artifactId>jauth-utils</artifactId>
     <version>1.0.0</version>
 </dependency>
