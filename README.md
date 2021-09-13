@@ -12,7 +12,7 @@ JAuth Utils is a Java library that simplifies JWT authentication wrap [jjwt](htt
 <dependency>
     <groupId>io.github.censodev</groupId>
     <artifactId>jauth-utils</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 ### Install with Maven CLI
@@ -91,7 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .cors()
                     .and()
-                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider(), User.class), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter<>(tokenProvider(), User.class), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                         .antMatchers(
                                 "/api/auth/**"
@@ -105,7 +105,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .header("Authorization")
                 .prefix("Bearer ")
                 .expiration(86_400_000)
-                .build();;
+                .build();
     }
 }
 ```
