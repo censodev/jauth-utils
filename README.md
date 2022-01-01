@@ -40,7 +40,8 @@ class User implements Credentials {
 
     @Override
     public List<String> getAuthorities() {
-        return new ArrayList<>(Arrays.asList("role_a", "role_b"));
+        // must use modifiable list
+        return new ArrayList<>(List.of("role_a", "role_b"));
     }
 }
 ```
