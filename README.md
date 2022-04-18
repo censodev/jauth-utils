@@ -1,13 +1,12 @@
 # JAuth Utils
-## Introduction
+## 1. Introduction
 JAuth Utils is a Java library that simplifies JWT authentication wrap [jjwt](https://github.com/jwtk/jjwt) and supports Spring Boot.
 
-## Prerequisites
+## 2. Prerequisites
 * Java 8
 * Maven 3
 
-## Installation
-### Config in pom.xml
+## 3. Installation
 ```
 <dependency>
     <groupId>io.github.censodev</groupId>
@@ -15,13 +14,9 @@ JAuth Utils is a Java library that simplifies JWT authentication wrap [jjwt](htt
     <version>1.0.1</version>
 </dependency>
 ```
-### Install with Maven CLI
-```
-mvn install
-```
 
-## Usages
-### Define Authenticatable entity
+## 4. Usages
+### 4.1. Define Authenticatable entity
 ```java
 class User implements Credentials {
     private String name = "name";
@@ -41,11 +36,11 @@ class User implements Credentials {
     @Override
     public List<String> getAuthorities() {
         // must use modifiable list
-        return new ArrayList<>(List.of("role_a", "role_b"));
+        return new ArrayList<>(Arrays.asList("role_a", "role_b"));
     }
 }
 ```
-### Initiate TokenProvider
+### 4.2. Initiate TokenProvider
 ```java
 // With default config
 TokenProvider tokenProvider = new TokenProvider();
@@ -57,15 +52,15 @@ TokenProvider tokenProvider = TokenProvider.builder()
         .expiration(86_400_000)
         .build();
 ```
-### Generate token
+### 4.3. Generate token
 ```java
 String token = tokenProvider.generateToken(new User());
 ```
-### Get credentials from token
+### 4.4. Get credentials from token
 ```java
 User u = tokenProvider.getCredentials(token, User.class);
 ```
-### Validate token
+### 4.5. Validate token
 ```java
 try {
     tokenProvider.validateToken(token);
@@ -81,7 +76,36 @@ try {
     e.printStackTrace();
 }
 ```
-### Config filter in Spring Security example
+### 4.6. Spring Boot filter
+#### 4.6.1. Initiate filter
+```java
+JwtAuthenticationFilter<User> filter = new JwtAuthenticationFilter<>(tokenProvider, User.class);
+
+// with filter hook
+JwtAuthenticationFilterHook hook = new JwtAuthenticationFilterHook() {
+    @Override
+    public void beforeValidate(TokenProvider tokenProvider, String token) {
+        // do something before validate token
+    }
+    
+    @Override
+    public void afterValidateWell(Credentials credentials) {
+        // do something after validate token successfully
+    }
+    
+    @Override
+    public void afterValidateFailed(JwtException ex) {
+        // do something after validate token failed
+    }
+
+    @Override
+    public void onError(Exception ex) {
+        // do something when unexpected errors occur
+    }
+};
+JwtAuthenticationFilter<User> filter = new JwtAuthenticationFilter<>(tokenProvider, User.class, hook);
+```
+#### 4.6.2. Configure security bean
 ```java
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -92,7 +116,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .cors()
                     .and()
-                .addFilterBefore(new JwtAuthenticationFilter<>(tokenProvider(), User.class), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                         .antMatchers(
                                 "/api/auth/**"
@@ -110,7 +134,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 }
 ```
-### Get credentials from security context
+#### 4.6.3. Get credentials from security context
 ```java
 Optional<User> u = Optional.ofNullable((User) SecurityContextHolder.getContext().getAuthentication().getCredentials());
 ```

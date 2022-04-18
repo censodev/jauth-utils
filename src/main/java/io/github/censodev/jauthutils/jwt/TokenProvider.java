@@ -1,4 +1,4 @@
-package com.censodev.jauthutils.jwt;
+package io.github.censodev.jauthutils.jwt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
