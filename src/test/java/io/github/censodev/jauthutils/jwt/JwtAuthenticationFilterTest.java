@@ -45,10 +45,10 @@ class JwtAuthenticationFilterTest {
 
     @Test
     void expect401() {
-//        MockHttpServletRequest req = new MockHttpServletRequest();
-//        MockHttpServletResponse res = new MockHttpServletResponse();
-//        MockFilterChain chain = new MockFilterChain();
-//        filter.doFilterInternal(req, res, chain);
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        MockFilterChain chain = new MockFilterChain();
+        filter.doFilterInternal(req, res, chain);
     }
 
     @Test

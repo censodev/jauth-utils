@@ -60,6 +60,7 @@ public class JwtAuthenticationFilter<T extends Credentials> extends OncePerReque
         String header = request.getHeader(tokenProvider.getHeader());
 
         if (header == null || !header.startsWith(tokenProvider.getPrefix())) {
+            hook.afterValidateFailed(new JwtException("Invalid HTTP header for authentication"));
             try {
                 chain.doFilter(request, response);
             } catch (IOException | ServletException e) {
