@@ -7,7 +7,7 @@
     <groupId>io.github.censodev</groupId>
     <artifactId>jauth-utils</artifactId>
     <packaging>jar</packaging>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <name>JAuth Utils</name>
     <description>JAuth Utils is a Java library that simplifies JWT authentication wrap jjwt and supports Spring Boot</description>
     <url>https://github.com/censodev/jauth-utils</url>
