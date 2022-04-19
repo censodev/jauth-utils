@@ -100,7 +100,7 @@ AuthenticationFilterHook hook = new AuthenticationFilterHook() {
     }
     
     @Override
-    public void afterValidateFailed(AuthenticationException ex) {
+    public void afterValidateFailed(JwtException ex) {
         // do something after validate token failed
     }
 
