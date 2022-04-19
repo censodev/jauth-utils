@@ -1,5 +1,6 @@
 package io.github.censodev.jauthutils.core;
 
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,17 +15,18 @@ class TokenProviderTest {
 
     @BeforeEach
     void setUp() {
-        tokenProvider = TokenProvider.builder()
-                .header("Authorization")
-                .prefix("Bearer ")
-                .expireInMillisecond(86_400_000)
-                .build();
+        tokenProvider = new TokenProvider();
         user = new UserTest(Arrays.asList("ROLE_ADMIN", "ROLE_CUSTOMER"), "admin");
     }
 
     @Test
     void generateToken() {
         assertDoesNotThrow(() -> tokenProvider.generateToken(user));
+    }
+
+    @Test
+    void generateRefreshToken() {
+        assertDoesNotThrow(() -> tokenProvider.generateRefreshToken(user));
     }
 
     @Test
@@ -49,11 +51,26 @@ class TokenProviderTest {
 
     @Test
     void getExpiration() {
-        assertEquals(tokenProvider.getExpireInMillisecond(), 86_400_000);
+        assertEquals(tokenProvider.getExpireInMillisecond(), 3_600_000);
     }
 
     @Test
     void getSecret() {
         assertEquals(tokenProvider.getSecret(), "qwertyuiopasdfghjklzxcvbnm1!2@3#4$5%6^7&8*9(0)-_=+");
+    }
+
+    @Test
+    void getRefreshTokenExpireInMillisecond() {
+        assertEquals(tokenProvider.getRefreshTokenExpireInMillisecond(), 86_400_000);
+    }
+
+    @Test
+    void getCredentialClaimKey() {
+        assertEquals(tokenProvider.getCredentialClaimKey(), "credential");
+    }
+
+    @Test
+    void getSignatureAlgorithm() {
+        assertEquals(tokenProvider.getSignatureAlgorithm(), SignatureAlgorithm.HS256);
     }
 }

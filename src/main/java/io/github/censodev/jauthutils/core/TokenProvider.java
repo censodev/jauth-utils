@@ -26,7 +26,10 @@ public class TokenProvider {
     private String prefix = "Bearer ";
 
     @Builder.Default
-    private Integer expireInMillisecond = 86_400_000;
+    private Integer expireInMillisecond = 3_600_000;
+
+    @Builder.Default
+    private Integer refreshTokenExpireInMillisecond = 86_400_000;
 
     @Builder.Default
     private String secret = "qwertyuiopasdfghjklzxcvbnm1!2@3#4$5%6^7&8*9(0)-_=+";
@@ -47,6 +50,18 @@ public class TokenProvider {
     public <T extends Credential> String generateToken(T credentials) throws JsonProcessingException {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expireInMillisecond);
+        return Jwts.builder()
+                .setSubject(credentials.getSubject())
+                .claim(credentialClaimKey, mapper.writeValueAsString(credentials))
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(signatureAlgorithm, secret)
+                .compact();
+    }
+
+    public <T extends Credential> String generateRefreshToken(T credentials) throws JsonProcessingException {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + refreshTokenExpireInMillisecond);
         return Jwts.builder()
                 .setSubject(credentials.getSubject())
                 .claim(credentialClaimKey, mapper.writeValueAsString(credentials))
