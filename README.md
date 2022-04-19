@@ -11,20 +11,20 @@ JAuth Utils is a Java library that simplifies JWT authentication wrap [jjwt](htt
 <dependency>
     <groupId>io.github.censodev</groupId>
     <artifactId>jauth-utils</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
 ## 4. Usages
 ### 4.1. Define Authenticatable entity
 ```java
-class User implements Credentials {
+class User implements Credential {
     private String name = "name";
 
     // Getters, setters ...
 
     @Override
-    public Object getSubject() {
+    public String getSubject() {
         return "subject";
     }
 
@@ -56,9 +56,9 @@ TokenProvider tokenProvider = TokenProvider.builder()
 ```java
 String token = tokenProvider.generateToken(new User());
 ```
-### 4.4. Get credentials from token
+### 4.4. Get credential from token
 ```java
-User u = tokenProvider.getCredentials(token, User.class);
+User u = tokenProvider.getCredential(token, User.class);
 ```
 ### 4.5. Validate token
 ```java
@@ -79,17 +79,17 @@ try {
 ### 4.6. Spring Boot filter
 #### 4.6.1. Initiate filter
 ```java
-JwtAuthenticationFilter<User> filter = new JwtAuthenticationFilter<>(tokenProvider, User.class);
+SpringAuthenticationFilter<User> filter = new SpringAuthenticationFilter<>(tokenProvider, User.class);
 
 // with filter hook
-JwtAuthenticationFilterHook hook = new JwtAuthenticationFilterHook() {
+AuthenticationFilterHook hook = new AuthenticationFilterHook() {
     @Override
     public void beforeValidate(TokenProvider tokenProvider, String token) {
         // do something before validate token
     }
     
     @Override
-    public void afterValidateWell(Credentials credentials) {
+    public void afterValidateWell(Credential credential) {
         // do something after validate token successfully
     }
     
@@ -103,13 +103,12 @@ JwtAuthenticationFilterHook hook = new JwtAuthenticationFilterHook() {
         // do something when unexpected errors occur
     }
 };
-JwtAuthenticationFilter<User> filter = new JwtAuthenticationFilter<>(tokenProvider, User.class, hook);
+SpringAuthenticationFilter<User> filter = new SpringAuthenticationFilter<>(tokenProvider, User.class, hook);
 ```
 #### 4.6.2. Configure security bean
 ```java
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -134,7 +133,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 }
 ```
-#### 4.6.3. Get credentials from security context
+#### 4.6.3. Get credential from security context
 ```java
-Optional<User> u = Optional.ofNullable((User) SecurityContextHolder.getContext().getAuthentication().getCredentials());
+Optional<User> u = Optional.ofNullable((User) SecurityContextHolder.getContext().getAuthentication().getCredential());
 ```

@@ -1,5 +1,9 @@
-package io.github.censodev.jauthutils.jwt;
+package io.github.censodev.jauthutils.spring;
 
+import io.github.censodev.jauthutils.core.Credential;
+import io.github.censodev.jauthutils.core.AuthenticationFilterHook;
+import io.github.censodev.jauthutils.core.TokenProvider;
+import io.github.censodev.jauthutils.core.UserTest;
 import io.jsonwebtoken.JwtException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,26 +11,26 @@ import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-class JwtAuthenticationFilterTest {
-    JwtAuthenticationFilter<UserTest> filter;
+class SpringAuthenticationFilterTest {
+    SpringAuthenticationFilter<UserTest> filter;
     TokenProvider tokenProvider;
-    JwtAuthenticationFilterHook hook;
+    AuthenticationFilterHook hook;
 
     @BeforeEach
     void setUp() {
         tokenProvider = TokenProvider.builder()
                 .header("Authorization")
                 .prefix("Bearer ")
-                .expiration(86_400_000)
+                .expireInMillisecond(86_400_000)
                 .build();
-        hook = new JwtAuthenticationFilterHook() {
+        hook = new AuthenticationFilterHook() {
             @Override
             public void beforeValidate(TokenProvider tokenProvider, String token) {
 
             }
 
             @Override
-            public void afterValidateWell(Credentials credentials) {
+            public void afterValidateWell(Credential credential) {
 
             }
 
@@ -40,7 +44,7 @@ class JwtAuthenticationFilterTest {
 
             }
         };
-        filter = new JwtAuthenticationFilter<>(tokenProvider, UserTest.class, hook);
+        filter = new SpringAuthenticationFilter<>(tokenProvider, UserTest.class, hook);
     }
 
     @Test

@@ -1,5 +1,8 @@
-package io.github.censodev.jauthutils.jwt;
+package io.github.censodev.jauthutils.spring;
 
+import io.github.censodev.jauthutils.core.Credential;
+import io.github.censodev.jauthutils.core.AuthenticationFilterHook;
+import io.github.censodev.jauthutils.core.TokenProvider;
 import io.jsonwebtoken.JwtException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,22 +18,22 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class JwtAuthenticationFilter<T extends Credentials> extends OncePerRequestFilter {
+public class SpringAuthenticationFilter<T extends Credential> extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
     private final Class<T> credentialClass;
-    private final JwtAuthenticationFilterHook hook;
+    private final AuthenticationFilterHook hook;
 
-    public JwtAuthenticationFilter(TokenProvider tokenProvider, Class<T> credentialClass) {
+    public SpringAuthenticationFilter(TokenProvider tokenProvider, Class<T> credentialClass) {
         this.tokenProvider = tokenProvider;
         this.credentialClass = credentialClass;
-        this.hook = new JwtAuthenticationFilterHook() {
+        this.hook = new AuthenticationFilterHook() {
             @Override
             public void beforeValidate(TokenProvider tokenProvider, String token) {
 
             }
 
             @Override
-            public void afterValidateWell(Credentials credentials) {
+            public void afterValidateWell(Credential credential) {
 
             }
 
@@ -46,7 +49,7 @@ public class JwtAuthenticationFilter<T extends Credentials> extends OncePerReque
         };
     }
 
-    public JwtAuthenticationFilter(TokenProvider tokenProvider, Class<T> credentialClass, JwtAuthenticationFilterHook hook) {
+    public SpringAuthenticationFilter(TokenProvider tokenProvider, Class<T> credentialClass, AuthenticationFilterHook hook) {
         this.tokenProvider = tokenProvider;
         this.credentialClass = credentialClass;
         this.hook = hook;
@@ -73,16 +76,16 @@ public class JwtAuthenticationFilter<T extends Credentials> extends OncePerReque
         try {
             hook.beforeValidate(tokenProvider, token);
             tokenProvider.validateToken(token);
-            T credentials = tokenProvider.getCredentials(token, credentialClass);
-            List<SimpleGrantedAuthority> authorities = credentials
+            T credential = tokenProvider.getCredential(token, credentialClass);
+            List<SimpleGrantedAuthority> authorities = credential
                     .getAuthorities()
                     .stream().map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
-            String username = credentials.getUsername();
+            String username = credential.getUsername();
 
-            Authentication auth = new UsernamePasswordAuthenticationToken(username, credentials, authorities);
+            Authentication auth = new UsernamePasswordAuthenticationToken(username, credential, authorities);
             SecurityContextHolder.getContext().setAuthentication(auth);
-            hook.afterValidateWell(credentials);
+            hook.afterValidateWell(credential);
         } catch (JwtException e) {
             hook.afterValidateFailed(e);
             SecurityContextHolder.clearContext();

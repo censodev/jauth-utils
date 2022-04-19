@@ -1,4 +1,4 @@
-package io.github.censodev.jauthutils.jwt;
+package io.github.censodev.jauthutils.core;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -26,10 +26,16 @@ public class TokenProvider {
     private String prefix = "Bearer ";
 
     @Builder.Default
-    private int expiration = 86_400_000;
+    private Integer expireInMillisecond = 86_400_000;
 
     @Builder.Default
     private String secret = "qwertyuiopasdfghjklzxcvbnm1!2@3#4$5%6^7&8*9(0)-_=+";
+
+    @Builder.Default
+    private String credentialClaimKey = "credential";
+
+    @Builder.Default
+    private SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
     @Builder.Default
     private ObjectMapper mapper = JsonMapper.builder()
@@ -38,24 +44,24 @@ public class TokenProvider {
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .build();
 
-    public <T extends Credentials> String generateToken(T credentials) throws JsonProcessingException {
+    public <T extends Credential> String generateToken(T credentials) throws JsonProcessingException {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expiration);
+        Date expiryDate = new Date(now.getTime() + expireInMillisecond);
         return Jwts.builder()
-                .setSubject(String.valueOf(credentials.getSubject()))
-                .claim("credentials", mapper.writeValueAsString(credentials))
+                .setSubject(credentials.getSubject())
+                .claim(credentialClaimKey, mapper.writeValueAsString(credentials))
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(signatureAlgorithm, secret)
                 .compact();
     }
 
-    public <T extends Credentials> T getCredentials(String token, Class<T> tClass) throws IOException {
+    public <T extends Credential> T getCredential(String token, Class<T> tClass) throws IOException {
         Claims claims = Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(token)
                 .getBody();
-        return mapper.readValue(String.valueOf(claims.get("credentials")), tClass);
+        return mapper.readValue(String.valueOf(claims.get(credentialClaimKey)), tClass);
     }
 
     public void validateToken(String token) throws

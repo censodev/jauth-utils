@@ -1,21 +1,21 @@
-package io.github.censodev.jauthutils.jwt;
+package io.github.censodev.jauthutils.core;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-class UserTest implements Credentials {
+public class UserTest implements Credential {
     private List<String> authorities;
     private String username;
     private Instant createdAt;
 
-    UserTest(List<String> authorities, String username) {
+    public UserTest(List<String> authorities, String username) {
         this.authorities = authorities;
         this.username = username;
         createdAt = Instant.now();
     }
 
-    UserTest() {
+    public UserTest() {
     }
 
     public Instant getCreatedAt() {
@@ -35,7 +35,7 @@ class UserTest implements Credentials {
     }
 
     @Override
-    public Object getSubject() {
+    public String getSubject() {
         return username;
     }
 
