@@ -3,9 +3,9 @@ package io.github.censodev.jauthutils.spring;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.github.censodev.jauthutils.core.TokenProvider;
 import io.github.censodev.jauthutils.core.UserTest;
-import io.github.censodev.jauthutils.core.api.AuthenticationException;
 import io.github.censodev.jauthutils.core.api.AuthenticationFilterHook;
 import io.github.censodev.jauthutils.core.api.Credential;
+import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,7 +55,7 @@ class SpringAuthenticationFilterTest {
             }
 
             @Override
-            public void afterValidateFailed(AuthenticationException ex) {
+            public void afterValidateFailed(JwtException ex) {
                 assertNull(SecurityContextHolder.getContext().getAuthentication());
                 assertNotNull(ex);
                 assertEquals(ex.getMessage(), "Invalid HTTP header for authentication");
@@ -85,7 +85,7 @@ class SpringAuthenticationFilterTest {
             }
 
             @Override
-            public void afterValidateFailed(AuthenticationException ex) {
+            public void afterValidateFailed(JwtException ex) {
                 assertNull(SecurityContextHolder.getContext().getAuthentication());
                 assertNotNull(ex);
                 assertEquals(ex.getMessage(), "Invalid HTTP header for authentication");
@@ -123,7 +123,7 @@ class SpringAuthenticationFilterTest {
             }
 
             @Override
-            public void afterValidateFailed(AuthenticationException ex) {
+            public void afterValidateFailed(JwtException ex) {
                 assertNull(ex);
             }
         };
