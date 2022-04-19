@@ -52,14 +52,15 @@ TokenProvider tokenProvider = new TokenProvider();
 
 // With builder
 TokenProvider tokenProvider = TokenProvider.builder()
-        .header("Authorization")
-        .prefix("Bearer ")
-        .expiration(86_400_000)
+        .expireInMillisecond(3_600_000)
+        .refreshTokenExpireInMillisecond(86_400_000)
+        .secret("qwertyuiopasdfghjklzxcvbnm")
         .build();
 ```
-### 4.3. Generate token
+### 4.3. Generate tokens
 ```java
-String token = tokenProvider.generateToken(new User());
+String accessToken = tokenProvider.generateAccessToken(new User());
+String refreshToken = tokenProvider.generateRefreshToken(new User());
 ```
 ### 4.4. Get credential from token
 ```java
@@ -99,7 +100,7 @@ AuthenticationFilterHook hook = new AuthenticationFilterHook() {
     }
     
     @Override
-    public void afterValidateFailed(JwtException ex) {
+    public void afterValidateFailed(AuthenticationException ex) {
         // do something after validate token failed
     }
 
@@ -120,20 +121,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .cors()
                     .and()
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(springAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                         .antMatchers(
                                 "/api/auth/**"
                         ).permitAll()
-                        .anyRequest().authenticated();
+                .anyRequest().authenticated();
     }
 
     @Bean
     public TokenProvider tokenProvider() {
         return TokenProvider.builder()
-                .header("Authorization")
-                .prefix("Bearer ")
-                .expiration(86_400_000)
+                .expireInMillisecond(3_600_000)
+                .refreshTokenExpireInMillisecond(86_400_000)
+                .secret("qwertyuiopasdfghjklzxcvbnm")
                 .build();
     }
 }

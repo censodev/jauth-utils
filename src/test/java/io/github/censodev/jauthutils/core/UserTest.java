@@ -1,11 +1,14 @@
 package io.github.censodev.jauthutils.core;
 
+import io.github.censodev.jauthutils.core.api.Credential;
+
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class UserTest implements Credential {
-    private List<String> authorities;
+    private List<String> authorities = Collections.emptyList();
     private String username;
     private Instant createdAt;
 

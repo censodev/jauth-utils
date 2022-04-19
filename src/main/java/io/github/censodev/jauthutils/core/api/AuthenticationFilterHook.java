@@ -1,13 +1,13 @@
-package io.github.censodev.jauthutils.core;
+package io.github.censodev.jauthutils.core.api;
 
-import io.jsonwebtoken.JwtException;
+import io.github.censodev.jauthutils.core.TokenProvider;
 
 public interface AuthenticationFilterHook {
     void beforeValidate(TokenProvider tokenProvider, String token);
 
     void afterValidateWell(Credential credential);
 
-    void afterValidateFailed(JwtException ex);
+    void afterValidateFailed(AuthenticationException ex);
 
     void onError(Exception ex);
 }

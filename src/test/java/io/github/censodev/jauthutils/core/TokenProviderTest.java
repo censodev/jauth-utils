@@ -1,5 +1,6 @@
 package io.github.censodev.jauthutils.core;
 
+import io.github.censodev.jauthutils.core.api.Credential;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +21,8 @@ class TokenProviderTest {
     }
 
     @Test
-    void generateToken() {
-        assertDoesNotThrow(() -> tokenProvider.generateToken(user));
+    void generateAccessToken() {
+        assertDoesNotThrow(() -> tokenProvider.generateAccessToken(user));
     }
 
     @Test

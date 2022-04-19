@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.github.censodev.jauthutils.core.api.Credential;
 import io.jsonwebtoken.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,28 +48,12 @@ public class TokenProvider {
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .build();
 
-    public <T extends Credential> String generateToken(T credentials) throws JsonProcessingException {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expireInMillisecond);
-        return Jwts.builder()
-                .setSubject(credentials.getSubject())
-                .claim(credentialClaimKey, mapper.writeValueAsString(credentials))
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(signatureAlgorithm, secret)
-                .compact();
+    public <T extends Credential> String generateAccessToken(T credential) throws JsonProcessingException {
+        return generateToken(credential, expireInMillisecond);
     }
 
-    public <T extends Credential> String generateRefreshToken(T credentials) throws JsonProcessingException {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + refreshTokenExpireInMillisecond);
-        return Jwts.builder()
-                .setSubject(credentials.getSubject())
-                .claim(credentialClaimKey, mapper.writeValueAsString(credentials))
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(signatureAlgorithm, secret)
-                .compact();
+    public <T extends Credential> String generateRefreshToken(T credential) throws JsonProcessingException {
+        return generateToken(credential, refreshTokenExpireInMillisecond);
     }
 
     public <T extends Credential> T getCredential(String token, Class<T> tClass) throws IOException {
@@ -86,5 +71,17 @@ public class TokenProvider {
             IllegalArgumentException,
             SignatureException {
         Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+    }
+
+    private <T extends Credential> String generateToken(T credential, Integer expireInMillisecond) throws JsonProcessingException {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + expireInMillisecond);
+        return Jwts.builder()
+                .setSubject(credential.getSubject())
+                .claim(credentialClaimKey, mapper.writeValueAsString(credential))
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(signatureAlgorithm, secret)
+                .compact();
     }
 }

@@ -1,7 +1,8 @@
 package io.github.censodev.jauthutils.spring;
 
-import io.github.censodev.jauthutils.core.Credential;
-import io.github.censodev.jauthutils.core.AuthenticationFilterHook;
+import io.github.censodev.jauthutils.core.api.AuthenticationException;
+import io.github.censodev.jauthutils.core.api.Credential;
+import io.github.censodev.jauthutils.core.api.AuthenticationFilterHook;
 import io.github.censodev.jauthutils.core.TokenProvider;
 import io.jsonwebtoken.JwtException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,7 +44,7 @@ public class SpringAuthenticationFilter<T extends Credential> extends OncePerReq
             }
 
             @Override
-            public void afterValidateFailed(JwtException ex) {
+            public void afterValidateFailed(AuthenticationException ex) {
 
             }
         };
@@ -63,7 +64,7 @@ public class SpringAuthenticationFilter<T extends Credential> extends OncePerReq
         String header = request.getHeader(tokenProvider.getHeader());
 
         if (header == null || !header.startsWith(tokenProvider.getPrefix())) {
-            hook.afterValidateFailed(new JwtException("Invalid HTTP header for authentication"));
+            hook.afterValidateFailed(new AuthenticationException("Invalid HTTP header for authentication"));
             try {
                 chain.doFilter(request, response);
             } catch (IOException | ServletException e) {
@@ -86,7 +87,7 @@ public class SpringAuthenticationFilter<T extends Credential> extends OncePerReq
             Authentication auth = new UsernamePasswordAuthenticationToken(username, credential, authorities);
             SecurityContextHolder.getContext().setAuthentication(auth);
             hook.afterValidateWell(credential);
-        } catch (JwtException e) {
+        } catch (AuthenticationException e) {
             hook.afterValidateFailed(e);
             SecurityContextHolder.clearContext();
         } catch (Exception e) {

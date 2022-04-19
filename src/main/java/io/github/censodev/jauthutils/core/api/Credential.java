@@ -1,4 +1,4 @@
-package io.github.censodev.jauthutils.core;
+package io.github.censodev.jauthutils.core.api;
 
 import java.util.List;
 
