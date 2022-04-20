@@ -78,7 +78,7 @@ public class SpringAuthenticationFilter<T extends Credential> extends OncePerReq
             tokenProvider.validateToken(token);
             T credential = tokenProvider.getCredential(token, credentialClass);
             List<SimpleGrantedAuthority> authorities = credential
-                    .getNotNullAuthorities()
+                    .getAuthorities()
                     .stream().map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
             String username = credential.getUsername();
