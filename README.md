@@ -12,12 +12,12 @@ JAuth Utils is a Java library that simplifies JWT authentication wrap [jjwt](htt
 <dependency>
     <groupId>io.github.censodev</groupId>
     <artifactId>jauth-utils</artifactId>
-    <version>3.0.1</version>
+    <version>3.0.2</version>
 </dependency>
 ```
 ### Gradle
 ```
-implementation 'io.github.censodev:jauth-utils:3.0.1'
+implementation 'io.github.censodev:jauth-utils:3.0.2'
 ```
 
 ## 4. Usages
