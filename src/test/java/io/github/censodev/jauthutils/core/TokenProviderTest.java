@@ -32,8 +32,10 @@ class TokenProviderTest {
 
     @Test
     void getCredentials() {
-        String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImNyZWRlbnRpYWxzIjoie1wiYXV0aG9yaXRpZXNcIjpbXCJST0xFX0FETUlOXCIsXCJST0xFX0NVU1RPTUVSXCJdLFwidXNlcm5hbWVcIjpcImFkbWluXCIsXCJjcmVhdGVkQXRcIjpcIjIwMjItMDQtMThUMDk6NTY6MTYuMzQ2ODk3NTAwWlwiLFwic3ViamVjdFwiOlwiYWRtaW5cIn0iLCJpYXQiOjE2NTAyNzU3NzYsImV4cCI6MTY1MDM2MjE3Nn0.2t4MfmktT8ARk0ytl-tVP7JigUFYks4cHY_yO4QIEYk";
-        assertDoesNotThrow(() -> tokenProvider.getCredential(token, UserTest.class));
+        assertDoesNotThrow(() -> {
+            String token = tokenProvider.generateAccessToken(new UserTest());
+            tokenProvider.getCredential(token, UserTest.class);
+        });
     }
 
     @Test
