@@ -1,4 +1,5 @@
-# JAuth Utils
+# JAuth Utils [Deprecated]
+**This library is deprecated, recommend using [JAuth Lib](https://github.com/censodev/jauth-lib)**
 ## 1. Introduction
 JAuth Utils is a Java library that simplifies JWT authentication wrap [jjwt](https://github.com/jwtk/jjwt) and supports Spring Boot.
 
